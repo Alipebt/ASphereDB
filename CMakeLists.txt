@@ -3,8 +3,9 @@ project(ASphereDBImpl)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS_DEBUG_INIT "-std=c++2a -g -fno-omit-frame-pointer  -fsanitize=address")
+set(CMAKE_CXX_FLAGS_DEBUG_INIT "-std=c++2a -g -fno-omit-frame-pointer")
 set(CMAKE_CXX_FLAGS_RELEASE_INIT "-std=c++2a -g -O2")
+set(CMAKE_CXX_FLAGS "-fsanitize=address")
 
 # 头文件
 include_directories(
@@ -32,9 +33,13 @@ target_link_libraries(file_manager_test gtest gtest_main)
 add_executable(db_test db/db.cc db/file_manager.cc table/memtable.cc test/db_test)
 target_link_libraries(db_test gtest gtest_main )
 
+add_executable(block_builder_test table/block_builder.cc util/coding.cc  test/block_builder_test)
+target_link_libraries(block_builder_test gtest gtest_main )
+
 # 添加测试
 add_test(NAME memtable_test COMMAND memtable_test)
 add_test(NAME file_manager_test COMMAND file_manager_test)
 add_test(NAME db_test COMMAND db_test)
+add_test(NAME block_builder_test COMMAND block_builder_test)
 
 

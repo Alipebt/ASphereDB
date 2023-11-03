@@ -1,4 +1,5 @@
 #include "db.h"
+#include <memory>
 #include "file_manager.h"
 
 DB::DB(const std::string &dbpath)

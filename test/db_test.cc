@@ -12,4 +12,5 @@ TEST(db_test, PG) {
     ASSERT_EQ(db->Delete("key"), S_OK);
     ASSERT_EQ(db->Get("key", value), S_OK);
     ASSERT_EQ(DB::Destory("dbtest"), S_OK);
+    delete db;
 }
