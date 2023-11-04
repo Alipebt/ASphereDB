@@ -61,7 +61,9 @@ STATUS Finish();
 - `Reset()`重置正在构建的`Block`块
 - `Finish()`完成正在构建的`Block`块
 
-在 `block` 中存储的 `key-value` 是顺序存储的，所以会出现多个连续的 `key` 有部分前缀是相同的，所以在写入`block`中时需要将key压缩。它的存储格式为：
+### Data Block
+
+在 `data block` 中存储的 `key-value` 是顺序存储的，所以会出现多个连续的 `key` 有部分前缀是相同的，所以在写入`block`中时需要将key压缩。它的存储格式为：
 
 ```
 [key相同部分的大小][key中不同部分的大小][value大小][key中不同部分的值][value值]
@@ -95,3 +97,7 @@ STATUS Finish();
 
 - `buffer_.substr(begin,end)`，其取出的值类型为`std::string`
 - `Decode2Int()`可以将`std::string`类型的内容以二进制形式直接转为 int 类型。
+
+### Meta Block
+
+一个`Meta Block`对应一个`Data Block`，它的作用是快速判断对应的`data block`中是否存在某个 key。（见 `Bloom Filter`）

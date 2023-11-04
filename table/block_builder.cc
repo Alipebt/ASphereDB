@@ -59,7 +59,7 @@ std::string BlockBuilder::Finish() {
     return buffer_;
 }
 
-void BlockBuilder::Lookup() {
+void BlockBuilder::lookup() {
     int writelen = 0;
     while (writelen < buffer_.size()) {
         int shared_head = writelen;
@@ -88,3 +88,5 @@ void BlockBuilder::Lookup() {
     }
     return;
 }
+
+std::string BlockBuilder::getBuffer() { return buffer_; }

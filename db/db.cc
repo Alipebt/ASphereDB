@@ -43,7 +43,4 @@ STATUS DB::Get(const std::string &key, std::string &value) {
     return mtable_->Get(key, value);
 }
 
-STATUS DB::Lookup() {
-    mtable_->Lookup();
-    return;
-}
+void DB::lookup() { mtable_->lookup(); }

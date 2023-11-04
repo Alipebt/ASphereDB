@@ -51,7 +51,9 @@ class MemTable {
 
     STATUS Add(const MemKey &key, const string &value);
     STATUS Get(const string &key, string &value);
-    void Lookup();
+
+    // TEST
+    void lookup();
 
    private:
     map<MemKey, string> memtable_;

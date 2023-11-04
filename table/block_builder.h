@@ -17,7 +17,8 @@ class BlockBuilder {
     std::string Finish();
 
     // TEST
-    void Lookup();
+    void lookup();
+    std::string getBuffer();
 
    private:
     const Options *op_;
