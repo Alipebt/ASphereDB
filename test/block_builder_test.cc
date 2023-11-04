@@ -23,5 +23,5 @@ TEST(block_builder_test, Add) {
     bb.Add("key_cccc", "value017");
     bb.Add("key_dddd", "value018");
 
-    bb.Lookup();
+    // bb.Lookup();
 }

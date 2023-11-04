@@ -2,11 +2,13 @@
 #include <iostream>
 #include "../util/coding.h"
 
-BlockBuilder::BlockBuilder() : op_(new Options), counter_(0) {}
+BlockBuilder::BlockBuilder() : op_(new Options), counter_(0) {
+    restarts_.push_back(0);
+}
 
 BlockBuilder::~BlockBuilder() { delete op_; }
 
-STATUS BlockBuilder::Add(const std::string &key, const std::string &value) {
+void BlockBuilder::Add(const std::string &key, const std::string &value) {
     size_t shared_len = 0;
     if (counter_ < op_->block_restart_interval) {
         // 寻找key的相同内容长度
@@ -37,14 +39,27 @@ STATUS BlockBuilder::Add(const std::string &key, const std::string &value) {
         key.substr(0, key.size() - non_shared_len ? key.size() - non_shared_len
                                                   : key.size());
     counter_++;
-    return S_OK;
+    return;
 }
 
-STATUS BlockBuilder::Reset() { return S_OK; }
+void BlockBuilder::Reset() {
+    buffer_.clear();
+    counter_ = 0;
+    last_key_.clear();
+    restarts_.clear();
+    restarts_.push_back(0);
+    return;
+}
 
-STATUS BlockBuilder::Finish() { return STATUS(); }
+std::string BlockBuilder::Finish() {
+    for (size_t i = 0; i < restarts_.size(); i++) {
+        buffer_.append(reinterpret_cast<char *>(&restarts_[i]), sizeof(int));
+    }
+    buffer_.append(reinterpret_cast<char *>(buffer_.size()), sizeof(int));
+    return buffer_;
+}
 
-STATUS BlockBuilder::Lookup() {
+void BlockBuilder::Lookup() {
     int writelen = 0;
     while (writelen < buffer_.size()) {
         int shared_head = writelen;
@@ -71,5 +86,5 @@ STATUS BlockBuilder::Lookup() {
 
         writelen = value_head + value_len;
     }
-    return S_OK;
+    return;
 }

@@ -30,7 +30,7 @@ STATUS MemTable::Get(const string &key, string &value) {
     return S_ERROR;
 }
 
-STATUS MemTable::Lookup() {
+void MemTable::Lookup() {
     for (auto it = memtable_.begin(); it != memtable_.end(); ++it) {
         std::cout << "|" << it->first.user_key_;
         std::cout << "|" << it->first.seq_;
@@ -38,5 +38,5 @@ STATUS MemTable::Lookup() {
         std::cout << "|" << it->second;
         std::cout << "|" << std::endl;
     }
-    return S_OK;
+    return;
 }

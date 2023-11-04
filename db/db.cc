@@ -43,4 +43,7 @@ STATUS DB::Get(const std::string &key, std::string &value) {
     return mtable_->Get(key, value);
 }
 
-STATUS DB::Lookup() { return mtable_->Lookup(); }
+STATUS DB::Lookup() {
+    mtable_->Lookup();
+    return;
+}

@@ -12,12 +12,12 @@ class BlockBuilder {
     BlockBuilder();
     ~BlockBuilder();
 
-    STATUS Add(const std::string &key, const std::string &value);
-    STATUS Reset();
-    STATUS Finish();
+    void Add(const std::string &key, const std::string &value);
+    void Reset();
+    std::string Finish();
 
     // TEST
-    STATUS Lookup();
+    void Lookup();
 
    private:
     const Options *op_;
