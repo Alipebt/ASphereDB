@@ -24,22 +24,32 @@ configure_file(test.sh ${CMAKE_CURRENT_BINARY_DIR}/test.sh COPYONLY)
 file(COPY test.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # 为测试文件添加链接
-add_executable(memtable_test table/memtable.cc test/memtable_test.cc)
-target_link_libraries(memtable_test gtest gtest_main)
+# memtable_test
+add_executable(table_test  test/table_test.cc 
+                table/memtable.cc
+                table/block_builder.cc
+                table/filter_block.cc
+                util/coding.cc
+                util/bloom.cc
+                util/hash.cc)
+target_link_libraries(table_test gtest gtest_main)
 
-add_executable(file_manager_test db/file_manager.cc test/file_manager_test)
-target_link_libraries(file_manager_test gtest gtest_main)
-
-add_executable(db_test db/db.cc db/file_manager.cc table/memtable.cc test/db_test)
+# db_test
+add_executable(db_test  test/db_test.cc db/db.cc 
+                db/file_manager.cc
+                table/memtable.cc)
 target_link_libraries(db_test gtest gtest_main )
 
-add_executable(block_builder_test table/block_builder.cc util/coding.cc  test/block_builder_test)
-target_link_libraries(block_builder_test gtest gtest_main )
+# util_test
+add_executable(util_test test/util_test.cc
+                util/hash.cc 
+                util/bloom.cc
+                util/coding.cc)
+target_link_libraries(util_test gtest gtest_main )
 
 # 添加测试
-add_test(NAME memtable_test COMMAND memtable_test)
-add_test(NAME file_manager_test COMMAND file_manager_test)
+add_test(NAME table_test COMMAND table_test)
 add_test(NAME db_test COMMAND db_test)
-add_test(NAME block_builder_test COMMAND block_builder_test)
+add_test(NAME util_test COMMAND util_test)
 
 

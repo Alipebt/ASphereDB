@@ -8,6 +8,7 @@
 
 class DB {
    public:
+    DB() = delete;
     DB(const std::string &dppath);
     ~DB();
 
