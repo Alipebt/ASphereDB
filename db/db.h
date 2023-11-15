@@ -9,7 +9,7 @@
 class DB {
    public:
     DB() = delete;
-    DB(const std::string &dppath);
+    DB(const std::string &dbpath);
     ~DB();
 
     static STATUS Create(const std::string &dbname);
