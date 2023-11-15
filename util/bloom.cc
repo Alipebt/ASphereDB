@@ -12,9 +12,9 @@ BloomFilter::BloomFilter(int bits_per_key) : bits_per_key_(bits_per_key) {
     }
 };
 
-std::string BloomFilter::FilterName() const { return "Bloom Filter"; }
+std::string BloomFilter::FilterName() const { return "Bloom"; }
 
-void BloomFilter::CreateBitmap(const std::vector<std::string> &keys,
+void BloomFilter::BuildBitmap(const std::vector<std::string> &keys,
                                std::string &bitmap) const {
     size_t bitmap_size = keys.size() * bits_per_key_;
     size_t init_size = bitmap.size();

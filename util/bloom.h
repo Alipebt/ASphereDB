@@ -7,7 +7,8 @@ class BloomFilter : public Filter {
     BloomFilter(int bits_per_key);
 
     std::string FilterName() const override;
-    void CreateBitmap(const std::vector<std::string> &keys,
+    // 将新数据追加到 bitmaps_ 中
+    void BuildBitmap(const std::vector<std::string> &keys,
                       std::string &bitmap) const override;
     bool KeyMayMatch(const std::string &key,
                      const std::string &bitmap) const override;

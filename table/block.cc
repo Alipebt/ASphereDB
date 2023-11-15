@@ -1,6 +1,19 @@
-#include "block_builder.h"
+#include "block.h"
 #include <iostream>
 #include "../util/coding.h"
+
+void BlockHandle::Encode(std::string *dst) {
+    dst->append(reinterpret_cast<char *>(&offset_), sizeof(int));
+    dst->append(reinterpret_cast<char *>(&size_), sizeof(int));
+}
+STATUS BlockHandle::Decode(const std::string &src) {
+    if (src.size() < sizeof(int) * 2) {
+        return S_ERROR;
+    }
+    offset_ = Decode2Int(src.data(), 0, sizeof(int));
+    size_ = Decode2Int(src.data(), sizeof(int), sizeof(int));
+    return S_OK;
+}
 
 BlockBuilder::BlockBuilder() : op_(new Options), counter_(0) {
     restarts_.push_back(0);
@@ -55,8 +68,14 @@ std::string BlockBuilder::Finish() {
     for (size_t i = 0; i < restarts_.size(); i++) {
         buffer_.append(reinterpret_cast<char *>(&restarts_[i]), sizeof(int));
     }
-    buffer_.append(reinterpret_cast<char *>(buffer_.size()), sizeof(int));
+    buffer_.append(reinterpret_cast<char *>(restarts_.size()), sizeof(int));
     return buffer_;
+}
+
+size_t BlockBuilder::BlockSize() {
+    return buffer_.size()                         // buffer大小
+           + restarts_.size() * sizeof(uint32_t)  // 重启点大小
+           + sizeof(uint32_t);                    // 重启点长度
 }
 
 void BlockBuilder::lookup() {

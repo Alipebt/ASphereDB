@@ -1,6 +1,5 @@
 #include "../db/db.h"
 #include <gtest/gtest.h>
-#include "../db/file_manager.h"
 
 TEST(db_test, PG) {
     DB *db;
@@ -14,11 +13,4 @@ TEST(db_test, PG) {
     ASSERT_EQ(db->Get("key", value), S_OK);
     ASSERT_EQ(DB::Destory("dbtest"), S_OK);
     delete db;
-}
-
-TEST(db_test, FileManager) {
-    FileManager fm;
-    ASSERT_EQ(fm.Create("dirtest", T_DIR), S_OK) << "Create dir error";
-    ASSERT_EQ(fm.Exists("dirtest"), S_OK) << "Exitst error";
-    ASSERT_EQ(fm.Delete("dirtest"), S_OK) << "Delete dir error";
 }

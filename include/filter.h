@@ -4,13 +4,11 @@
 #include <string>
 #include <vector>
 
-
-
 class Filter {
    public:
     virtual std::string FilterName() const = 0;
-    virtual void CreateBitmap(const std::vector<std::string> &keys,
-                              std::string &bitmap) const = 0;
+    virtual void BuildBitmap(const std::vector<std::string> &keys,
+                             std::string &bitmap) const = 0;
     virtual bool KeyMayMatch(const std::string &key,
                              const std::string &bitmap) const = 0;
 };

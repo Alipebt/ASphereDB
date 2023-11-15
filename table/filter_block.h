@@ -11,9 +11,11 @@ class FilterBlockBuilder {
     FilterBlockBuilder() = delete;
     FilterBlockBuilder(const Filter *filter);
 
+    // 构造 Filter Block
     void BuildBlocks(const uint64_t &block_size);
     void AddKey(const std::vector<std::string> &keys);
     void AddKey(const std::string &key);
+    // 结束构造，返回Filter Block
     std::string Finish();
 
    private:

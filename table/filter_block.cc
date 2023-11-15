@@ -2,8 +2,8 @@
 #include "../util/coding.h"
 
 // 每个Filter Block的大小 （2K）
-static const uint64_t kBlockSizelg = 11;
-static const uint64_t kBlockSize = 1 << kBlockSizelg;
+static constexpr uint64_t kBlockSizelg = 11;
+static constexpr uint64_t kBlockSize = 1 << kBlockSizelg;
 
 FilterBlockBuilder::FilterBlockBuilder(const Filter *filter)
     : filter_(filter) {}
@@ -13,7 +13,7 @@ void FilterBlockBuilder::Key2Bitmap() {
         bitmap_offset_.push_back(bitmaps_.size());
         return;
     }
-    filter_->CreateBitmap(keys_, bitmaps_);
+    filter_->BuildBitmap(keys_, bitmaps_);
 
     bitmap_offset_.push_back(bitmaps_.size());
     keys_.clear();

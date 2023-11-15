@@ -5,5 +5,7 @@ enum STATUS {
     S_NOTFOUND,
     S_ERROR,
     S_EXISTS,
+    S_IOERROR,
+    S_CLOSEERROR,
 };
 #endif

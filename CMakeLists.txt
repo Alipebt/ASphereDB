@@ -24,10 +24,10 @@ configure_file(test.sh ${CMAKE_CURRENT_BINARY_DIR}/test.sh COPYONLY)
 file(COPY test.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 # 为测试文件添加链接
-# memtable_test
+# table_test
 add_executable(table_test  test/table_test.cc 
                 table/memtable.cc
-                table/block_builder.cc
+                table/block.cc
                 table/filter_block.cc
                 util/coding.cc
                 util/bloom.cc
@@ -36,7 +36,6 @@ target_link_libraries(table_test gtest gtest_main)
 
 # db_test
 add_executable(db_test  test/db_test.cc db/db.cc 
-                db/file_manager.cc
                 table/memtable.cc)
 target_link_libraries(db_test gtest gtest_main )
 
@@ -44,7 +43,8 @@ target_link_libraries(db_test gtest gtest_main )
 add_executable(util_test test/util_test.cc
                 util/hash.cc 
                 util/bloom.cc
-                util/coding.cc)
+                util/coding.cc
+                util/file_manager.cc)
 target_link_libraries(util_test gtest gtest_main )
 
 # 添加测试
