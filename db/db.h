@@ -2,9 +2,13 @@
 #define DB_H_
 
 #include <atomic>
+#include <mutex>
 #include <string>
+#include "../include/annotations.h"
+#include "../include/options.h"
 #include "../include/status.h"
 #include "../table/memtable.h"
+#include "version.h"
 
 class DB {
    public:
@@ -26,10 +30,17 @@ class DB {
     void lookup();
 
    private:
+    STATUS WriteLevel0Table(Table::MemTable *mem);
+
+   private:
     std::string dbname_;
     Table::MemTable *mtable_;
-
     std::atomic<int64_t> seq_;
+
+    Options op_;
+
+    std::mutex mutex_;
+    Version *const versions_ GUARDED_BY(mutex_);
 };
 
 #endif

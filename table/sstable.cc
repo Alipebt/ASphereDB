@@ -33,6 +33,7 @@ STATUS SSTableBuilder::WriteBlock(const std::string &data,
         return st;
     }
     offset_ += buffer_.size();
+    return S_OK;
 }
 
 STATUS SSTableBuilder::FlushData() {

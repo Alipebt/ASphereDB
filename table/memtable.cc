@@ -1,5 +1,7 @@
 #include "memtable.h"
 #include <iostream>
+#include "../util/file_name.h"
+#include "sstable.h"
 
 using namespace Table;
 
@@ -28,6 +30,26 @@ STATUS MemTable::Get(const string &key, string &value) {
         return S_OK;
     }
     return S_ERROR;
+}
+
+// TODO
+STATUS Table::MemTable::BuildSSTable(const std::string &dbname,
+                                     FileMetaData *meta, const Options &op) {
+    std::string fname = SSTableFileName(dbname, meta->number);
+    TempFile *temp_file = nullptr;
+    FileManager::OpenTempFile(&temp_file);
+    auto ssbuilder = new Table::SSTableBuilder(dbname, temp_file, op);
+    for (auto it = memtable_.begin(); it != memtable_.end(); ++it) {
+        MemKey memkey = it->first;
+        std::string key = memkey.Encode2Key();
+        ssbuilder->Add(key, it->second);
+    }
+
+    // finish
+    ssbuilder->Finish();
+    delete ssbuilder;
+
+    return S_OK;
 }
 
 void MemTable::lookup() {

@@ -7,5 +7,7 @@ enum STATUS {
     S_EXISTS,
     S_IOERROR,
     S_CLOSEERROR,
+    S_OPENERROR,
+    S_RENAMEERROR,
 };
 #endif

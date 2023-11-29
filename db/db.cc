@@ -1,11 +1,14 @@
 #include "db.h"
 #include <memory>
-#include "file_manager.h"
+#include "../util/file_manager.h"
 
 DB::DB(const std::string &dbpath)
-    : dbname_(dbpath), mtable_(new Table::MemTable) {}
+    : dbname_(dbpath), mtable_(new Table::MemTable), versions_(new Version()) {}
 
-DB::~DB() { delete mtable_; }
+DB::~DB() {
+    delete mtable_;
+    delete versions_;
+}
 
 STATUS DB::Create(const std::string &dbname) {
     return FileManager::Create(dbname, T_DIR);
@@ -44,3 +47,14 @@ STATUS DB::Get(const std::string &key, std::string &value) {
 }
 
 void DB::lookup() { mtable_->lookup(); }
+
+STATUS DB::WriteLevel0Table(Table::MemTable *mem) {
+    FileMetaData meta;
+    meta.number = versions_->NewFileNumber();
+
+    mem->BuildSSTable(dbname_, &meta, op_);
+
+    // TODO
+
+    return S_OK;
+}

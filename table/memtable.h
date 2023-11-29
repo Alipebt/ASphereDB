@@ -4,7 +4,9 @@
 #include <cstdint>
 #include <map>
 #include <string>
+#include "../include/options.h"
 #include "../include/status.h"
+#include "../util/file_manager.h"
 
 namespace Table {
 
@@ -42,6 +44,13 @@ struct MemKey {
         }
         return user_key_ < other.user_key_;
     }
+
+    std::string Encode2Key() {
+        std::string key(user_key_);
+        key.append(reinterpret_cast<char *>(&seq_), sizeof(int));
+        key.append(reinterpret_cast<char *>(&kt_), 1);
+        return key;
+    }
 };
 
 class MemTable {
@@ -51,6 +60,8 @@ class MemTable {
 
     STATUS Add(const MemKey &key, const string &value);
     STATUS Get(const string &key, string &value);
+    STATUS BuildSSTable(const std::string &dbname, FileMetaData *meta,
+                        const Options &op);
 
     // TEST
     void lookup();

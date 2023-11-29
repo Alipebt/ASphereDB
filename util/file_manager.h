@@ -1,6 +1,7 @@
 #ifndef FILE_MANAGER_H_
 #define FILE_MANAGER_H_
 
+#include <stdint.h>
 #include <string>
 #include "status.h"
 
@@ -8,23 +9,19 @@
 static constexpr size_t kWriterBuflg = 16;
 static constexpr size_t kWriterBufSize = 1 << 16;
 
+struct FileMetaData {
+    uint64_t file_size;
+    uint64_t number;
+};
+
 enum FileType {
     T_DIR,
     T_FILE,
 };
 
-class FileManager {
-   public:
-    static STATUS Create(const std::string &path, FileType ft);
-    static STATUS Delete(const std::string &path);
-    static STATUS Exists(const std::string &path);
-
-   private:
-    std::string path_;
-};
-
 class FileWriter {
    public:
+    FileWriter(int fd, const std::string &filename);
     FileWriter(int fd);
     ~FileWriter();
 
@@ -36,7 +33,8 @@ class FileWriter {
    private:
     STATUS Write(const char *buf, size_t size);
 
-   private:
+   protected:
+    std::string filename_;
     int fd_;
     bool closed_;
 
@@ -54,4 +52,22 @@ class FileReader {
     int fd_;
 };
 
+class TempFile : public FileWriter {
+   public:
+    TempFile(const std::string &filename, int fd);
+    static STATUS Open(TempFile **ret);
+    STATUS Rename(const std::string &name);
+};
+
+class FileManager {
+   public:
+    static STATUS Create(const std::string &path, FileType ft);
+    static STATUS Delete(const std::string &path);
+    static STATUS Exists(const std::string &path);
+
+    static STATUS OpenTempFile(TempFile **ret);
+
+   private:
+    std::string path_;
+};
 #endif

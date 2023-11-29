@@ -36,7 +36,12 @@ STATUS FileManager::Exists(const std::string &dbpath) {
     return S_ERROR;
 }
 
+STATUS FileManager::OpenTempFile(TempFile **ret) { return TempFile::Open(ret); }
+
 FileWriter::FileWriter(int fd) : fd_(fd), closed_(false), pos_(0) {}
+
+FileWriter::FileWriter(int fd, const std::string &filename)
+    : filename_(filename), fd_(fd), closed_(false), pos_(0) {}
 
 FileWriter::~FileWriter() {
     if (!closed_) {
@@ -115,4 +120,28 @@ STATUS FileWriter::Write(const char *data, size_t size) {
     return S_OK;
 }
 
-FileReader::FileReader(int fd) :fd_(fd){}
+FileReader::FileReader(int fd) : fd_(fd) {}
+
+TempFile::TempFile(const std::string &filename, int fd)
+    : FileWriter(fd, filename) {}
+
+STATUS TempFile::Open(TempFile **ret) {
+    static char tmpname[] = "/tmp/asp_XXXXXX";
+    int fd = mkstemp(tmpname);
+    if (fd == -1) {
+        *ret == nullptr;
+        return S_OPENERROR;
+    }
+    std::string filename = std::filesystem::read_symlink(
+        std::filesystem::path("/proc/self/fd/" + std::to_string(fd)));
+    *ret = new TempFile(filename, fd);
+    return S_OK;
+}
+
+STATUS TempFile::Rename(const std::string &newname) {
+    int ret = rename(filename_.c_str(), newname.c_str());
+    if (ret < 0) {
+        return S_RENAMEERROR;
+    }
+    return S_OK;
+}
